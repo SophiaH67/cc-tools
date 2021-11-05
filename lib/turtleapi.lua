@@ -6,7 +6,7 @@ oturtle = table.clone(turtle)
 turtle._loaded = false
 
 -- keys that are removed for serialization
-local hidden_keys = {"_loaded", "native"}
+local hidden_keys = {"_loaded", "native", "movementHooks"}
 
 --[[ This is currently broken.
 Function only gets triggered on initial assignment.
