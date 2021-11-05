@@ -275,6 +275,36 @@ end
 
 -- #endregion
 
+-- #region [[ BezosMaps integration ]]
+
+local api_url = "https://reasoning-constitutional-affected-charter.trycloudflare.com"
+
+function turtle.movementHooks.updateBlocks()
+  local inspections = {
+    {turtle.inspect()},
+    {turtle.inspectUp()},
+    {turtle.inspectDown()}
+  }
+  for _, inspection in pairs(inspections) do
+    local success, block = inspection[1], inspection[2]
+    if not success then
+      block = {name="minecraft:air", x=block.x, y=block.y, z=block.z}
+    end
+    local url = api_url .. "/block/" .. block.x .. "/" .. block.y .. "/" .. block.z
+    http.post(url, textutils.serialiseJSON(block), {["Content-Type"]="application/json"})
+  end
+end
+
+function turtle.isWalkable(x,y,z)
+  local res = http.get(api_url.."/block/"..x.."/"..y.."/"..z)
+  if not res then return false end
+  local body = textutils.unserialiseJSON(res.readAll())
+  res.close()
+  return body.walkable
+end
+
+-- #endregion
+
 -- #region [[ Utils ]]
 
 function turtle.isInventoryFull()
