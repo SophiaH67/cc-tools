@@ -277,7 +277,16 @@ end
 
 -- #region [[ BezosMaps integration ]]
 
-local api_url = "https://reasoning-constitutional-affected-charter.trycloudflare.com"
+local api_url = "https://laundry-edwards-careers-gsm.trycloudflare.com/"
+
+function turtle.explore(max_moves)
+  local moves = {turtle.north, turtle.east, turtle.south, turtle.west, turtle.up, turtle.down}
+  max_moves = max_moves or math.huge
+  for move_count = 1, max_moves do
+    moves[math.random(1, #moves)]()
+  end
+
+end
 
 function turtle.movementHooks.updateBlocks()
   local inspections = {
