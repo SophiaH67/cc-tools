@@ -226,6 +226,23 @@ end
 
 -- #region [[ Inspecting ]]
 
+local function updateInventory(p, block)
+  if p == nil then return end
+  if p.size == nil then return end
+  block.inventory = {
+    maxCount=p.size(),
+    items={}
+  }
+  for inventorySlot = 1, p.size() do
+    local item = p.getItemDetail(inventorySlot)
+    if item == nil then
+      item = { name = "minecraft:air", displayName = "", count = 0, maxCount= 64}
+    end
+    item.slot = inventorySlot
+    block.inventory.items[inventorySlot] = item
+  end
+end
+
 function turtle.inspect()
   local success, block = oturtle.inspect()
 
@@ -242,6 +259,8 @@ function turtle.inspect()
   elseif turtle.direction == "EAST" then block.x = block.x + 1
   elseif turtle.direction == "WEST" then block.z = block.z - 1 end
 
+  updateInventory(peripheral.wrap("front"), block)
+
   return success, block
 end
 
@@ -256,6 +275,8 @@ function turtle.inspectUp()
   block.y = turtle.y+1
   block.z = turtle.z
 
+  updateInventory(peripheral.wrap("up"), block)
+
   return success, block
 end
 
@@ -269,6 +290,8 @@ function turtle.inspectDown()
   block.x = turtle.x
   block.y = turtle.y-1
   block.z = turtle.z
+
+  updateInventory(peripheral.wrap("down"), block)
 
   return success, block
 end
