@@ -96,6 +96,18 @@ function turtle.faceWest ()
 end
 -- #endregion
 
+-- #region [[ Movement Hooks ]]
+
+turtle.movementHooks = {}
+
+local function runMovementHooks()
+  for _, hook in pairs(turtle.movementHooks) do
+    hook()
+  end
+end
+
+-- #endregion
+
 -- #region [[ Basic Movement ]]--
 
 function turtle.forward()
@@ -111,7 +123,7 @@ function turtle.forward()
     turtle.x = previousX
     turtle.z = previousZ
     turtle.saveState()
-  end
+  else runMovementHooks() end
   return success, msg
 end
 
@@ -128,7 +140,7 @@ function turtle.back()
     turtle.x = previousX
     turtle.z = previousZ
     turtle.saveState()
-  end
+  else runMovementHooks() end
   return success, msg
 end
 
@@ -140,7 +152,7 @@ function turtle.up()
   if not success then
     turtle.y = previousY
     turtle.saveState()
-  end
+  else runMovementHooks() end
   return success, msg
 end
 
@@ -152,7 +164,7 @@ function turtle.down()
   if not success then
     turtle.y = previousY
     turtle.saveState()
-  end
+  else runMovementHooks() end
   return success, msg
 end
 
