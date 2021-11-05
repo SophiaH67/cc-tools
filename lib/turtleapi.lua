@@ -300,8 +300,6 @@ end
 
 -- #region [[ BezosMaps integration ]]
 
-local api_url = "https://laundry-edwards-careers-gsm.trycloudflare.com/"
-
 function turtle.explore(max_moves)
   local moves = {turtle.north, turtle.east, turtle.south, turtle.west, turtle.up, turtle.down}
   max_moves = max_moves or math.huge
@@ -322,13 +320,13 @@ function turtle.movementHooks.updateBlocks()
     if not success then
       block = {name="minecraft:air", x=block.x, y=block.y, z=block.z}
     end
-    local url = api_url .. "/block/" .. block.x .. "/" .. block.y .. "/" .. block.z
+    local url = env.bezosmaps_url .. "/block/" .. block.x .. "/" .. block.y .. "/" .. block.z
     http.post(url, textutils.serialiseJSON(block), {["Content-Type"]="application/json"})
   end
 end
 
 function turtle.isWalkable(x,y,z)
-  local res = http.get(api_url.."/block/"..x.."/"..y.."/"..z)
+  local res = http.get(env.bezosmaps_url.."/block/"..x.."/"..y.."/"..z)
   if not res then return false end
   local body = textutils.unserialiseJSON(res.readAll())
   res.close()
