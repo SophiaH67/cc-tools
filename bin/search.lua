@@ -19,7 +19,10 @@ table.sort(results, function(a, b)
   return math.sqrt(math.pow(a.inventory.block.x - x, 2) + math.pow(a.inventory.block.y - y, 2) + math.pow(a.inventory.block.z - z, 2)) < math.sqrt(math.pow(b.inventory.block.x - x, 2) + math.pow(b.inventory.block.y - y, 2) + math.pow(b.inventory.block.z - z, 2))
 end)
 
-print(type(results))
+if #results == 0 then
+  print("No results found for \"" .. item_name .. "\"")
+  return
+end
 
 for _, result in ipairs(results) do
   print(result.name .. " (" .. result.count .. "/" .. result.max_count .. ") " .. result.inventory.block.x .. "," .. result.inventory.block.y .. "," .. result.inventory.block.z)
