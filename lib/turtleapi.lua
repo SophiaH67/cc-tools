@@ -326,12 +326,18 @@ function turtle.movementHooks.updateBlocks()
   end
 end
 
-function turtle.isWalkable(x,y,z)
-  local res = http.get(env.bezosmaps_url.."/block/"..x.."/"..y.."/"..z)
-  if not res then return false end
-  local body = textutils.unserialiseJSON(res.readAll())
-  res.close()
-  return body.walkable
+function turtle.pathfind(targetX, targetY, targetZ)
+  local path = http.get(env.bezosmaps_url .. "/path/" .. turtle.x .. "/" .. turtle.y .. "/" .. turtle.z .. "/" .. targetX .. "/" .. targetY .. "/" .. targetZ)
+  if path == nil then
+    return false, "Could not connect to bezosmaps"
+  end
+  path = textutils.unserialiseJSON(path.readAll()).path
+  path = string.split(path, ";")
+  for _, move in pairs(path) do
+    local pos = string.split(move, ",")
+    local x, y, z = tonumber(pos[1]), tonumber(pos[2]), tonumber(pos[3])
+    turtle.dumbPathfind(x, y, z)
+  end
 end
 
 -- #endregion
