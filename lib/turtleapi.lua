@@ -94,6 +94,17 @@ function turtle.faceWest ()
     turtle.turnLeft()
   elseif turtle.direction == "SOUTH" then turtle.turnRight() end
 end
+
+function turtle.faceBlock (x, y, z)
+  local direction = getDirection(turtle.x, turtle.y, turtle.z, x, y, z)
+  if direction == "NORTH" then turtle.faceNorth()
+  elseif direction == "EAST" then turtle.faceEast()
+  elseif direction == "SOUTH" then turtle.faceSouth()
+  elseif direction == "WEST" then turtle.faceWest()
+  else return direction end
+  return true
+end
+
 -- #endregion
 
 -- #region [[ Movement Hooks ]]
