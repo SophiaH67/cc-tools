@@ -123,7 +123,8 @@ function turtle.forward()
     turtle.x = previousX
     turtle.z = previousZ
     turtle.saveState()
-  else runMovementHooks() end
+  end
+  runMovementHooks()
   return success, msg
 end
 
@@ -257,7 +258,7 @@ function turtle.inspect()
   if turtle.direction == "NORTH" then block.z = block.z - 1
   elseif turtle.direction == "SOUTH" then block.z = block.z + 1
   elseif turtle.direction == "EAST" then block.x = block.x + 1
-  elseif turtle.direction == "WEST" then block.z = block.z - 1 end
+  elseif turtle.direction == "WEST" then block.x = block.x - 1 end
 
   updateInventory(peripheral.wrap("front"), block)
 
