@@ -6,7 +6,7 @@ oturtle = table.clone(turtle)
 turtle._loaded = false
 
 -- keys that are removed for serialization
-local hidden_keys = {"_loaded", "native", "movementHooks", "async"}
+local hidden_keys = {"_loaded", "native", "movementHooks"}
 
 --[[ This is currently broken.
 Function only gets triggered on initial assignment.
@@ -322,17 +322,18 @@ function turtle.explore(max_moves)
 end
 
 function turtle.movementHooks.updateBlocks()
-  local inspectionPromises = {
-    turtle.async.inspect(),
-    turtle.async.inspectUp(),
-    turtle.async.inspectDown()
+  local inspections = {
+    {turtle.inspect()},
+    {turtle.inspectUp()},
+    {turtle.inspectDown()}
   }
-  for _, inspectionPromise in pairs(inspectionPromises) do
-    fhttp.init()
-    inspectionPromise.after(function (block)
-      local url = env.bezosmaps_url .. "/block/" .. block.x .. "/" .. block.y .. "/" .. block.z
-      fhttp.post(url, textutils.serialiseJSON(block), {["Content-Type"]="application/json"})
-    end)
+  for _, inspection in pairs(inspections) do
+    local success, block = inspection[1], inspection[2]
+    if not success then
+      block = {name="minecraft:air", x=block.x, y=block.y, z=block.z}
+    end
+    local url = env.bezosmaps_url .. "/block/" .. block.x .. "/" .. block.y .. "/" .. block.z
+    http.post(url, textutils.serialiseJSON(block), {["Content-Type"]="application/json"})
   end
 end
 
@@ -391,39 +392,6 @@ function turtle.detectDirection()
     elseif zdiff == 1 then return "SOUTH" end
   end
 end
--- #endregion
-
--- #region [[ Async Wrappers ]]
-
-if turtle.async == nil then
-  turtle.async = {}
-end
-
-function turtle.async.inspect()
-  return Promise.new(function(resolve, reject)
-    local success, block = turtle.inspect()
-    if success then
-      resolve(block)
-    else
-      reject(block)
-    end
-  end)
-end
-
-function turtle.async.inspectUp()
-  return Promise.new(function(resolve, reject)
-    local success, block = turtle.inspectUp()
-    resolve(block)
-  end)
-end
-
-function turtle.async.inspectDown()
-  return Promise.new(function(resolve, reject)
-    local success, block = turtle.inspectDown()
-    resolve(block)
-  end)
-end
-
 -- #endregion
 
 -- #region [[ Load previous state ]]--
