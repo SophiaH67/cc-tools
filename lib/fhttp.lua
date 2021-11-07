@@ -2,9 +2,12 @@ local client = libfrednet.RTPClient("1.0.1", 80)
 
 fhttp = {}
 
+local initialized = false
 
 function fhttp.init()
-  local loop = libfredio.get_event_loop() 
+  if initialized then return end
+  initialized = true
+  local loop = libfredio.get_event_loop()
   loop.task(libfrednet.connect())
 end
 
