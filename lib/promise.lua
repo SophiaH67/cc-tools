@@ -72,25 +72,20 @@ function Promise.new(fn)
 end
 
 function Promise.all(promises)
-  local self = Promise.new()
-  local values = {}
-  local count = 0
-  for _, promise in ipairs(promises) do
-    if Promise.isPromise(promise) then
-      promise:after(function(value)
-        count = count + 1
-        values[count] = value
-        if count == #promises then
-          self.resolve(values)
+  return Promise.new(function(resolve, reject)
+    local results = {}
+    local done = 0
+    for i, promise in ipairs(promises) do
+      promise.after(function (res)
+        results[i] = res
+        done = done + 1
+        if done == #promises then
+          resolve(results)
         end
-      end, self.reject)
-    else
-      count = count + 1
-      values[count] = promise
-      if count == #promises then
-        self.resolve(values)
-      end
+      end, function (err) reject(err) end)
     end
+  end)
+end
   end
   return self
 end
