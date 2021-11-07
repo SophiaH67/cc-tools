@@ -17,6 +17,7 @@ function Promise.new(fn)
   self.rejected = false
   self.resolve = function(value)
     if self.resolved or self.rejected then return end
+    os.queueEvent('promise_resolve', tostring(self))
     self.resolved = true
     self.value = value
     self.state = 'resolved'
@@ -86,6 +87,11 @@ function Promise.all(promises)
     end
   end)
 end
+
+function Promise.await(promise)
+  local e, v = os.pullEvent('promise_resolve')
+  while v ~= tostring(promise) do
+    e, v = os.pullEvent('promise_resolve')
   end
-  return self
+  return promise.value
 end
