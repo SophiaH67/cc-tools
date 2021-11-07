@@ -287,7 +287,7 @@ function turtle.inspectUp()
   block.y = turtle.y+1
   block.z = turtle.z
 
-  updateInventory(peripheral.wrap("up"), block)
+  updateInventory(peripheral.wrap("top"), block)
 
   return success, block
 end
@@ -303,7 +303,7 @@ function turtle.inspectDown()
   block.y = turtle.y-1
   block.z = turtle.z
 
-  updateInventory(peripheral.wrap("down"), block)
+  updateInventory(peripheral.wrap("bottom"), block)
 
   return success, block
 end
