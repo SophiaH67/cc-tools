@@ -241,6 +241,7 @@ end
 local function updateInventory(p, block)
   if p == nil then return end
   if p.size == nil then return end
+  if p.getItemDetail == nil then return end
   block.inventory = {
     maxCount=p.size(),
     items={}
