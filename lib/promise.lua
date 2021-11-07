@@ -70,3 +70,27 @@ function Promise.new(fn)
   end
   return self
 end
+
+function Promise.all(promises)
+  local self = Promise.new()
+  local values = {}
+  local count = 0
+  for _, promise in ipairs(promises) do
+    if Promise.isPromise(promise) then
+      promise:after(function(value)
+        count = count + 1
+        values[count] = value
+        if count == #promises then
+          self.resolve(values)
+        end
+      end, self.reject)
+    else
+      count = count + 1
+      values[count] = promise
+      if count == #promises then
+        self.resolve(values)
+      end
+    end
+  end
+  return self
+end
